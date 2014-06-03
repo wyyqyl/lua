@@ -591,3 +591,40 @@ l_noret luaG_runerror (lua_State *L, const char *fmt, ...) {
   luaG_errormsg(L);
 }
 
+
+#if defined(LUA_DEBUG)
+
+
+void luaG_dumpnode(Node* node) {
+  if (luaH_isdummy(node)) {
+    printf("DUMMY NODE\n");
+  } else {
+    TValue* key = gkey(node);
+    TValue* value = gval(node);
+
+    lua_dumpkey(key);
+    printf("\t: ");
+
+    lua_dumpkey(value);
+    printf("\n");
+  }
+}
+
+
+void luaG_dumptable(lua_State* L, Table* t) {
+  int idx;
+  printf("\n\n----------------L: 0x%p, T: 0x%p----------------\n", L, t->node);
+  for (idx = 0; idx < 1 << t->lsizenode; ++idx) {
+    luaG_dumpnode(t->node + idx);
+  }
+  printf("----------------\n", t->node);
+}
+
+
+void luaG_dumpnodeindex(Table* t, Node* node, const char* msg) {
+  printf("%sIndex: %d\n", msg,
+    (cast_int(node) - cast_int(t->node)) / sizeof(Node));
+}
+
+
+#endif // LUA_DEBUG

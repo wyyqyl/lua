@@ -404,20 +404,24 @@ static Node *getfreepos (Table *t) {
 */
 TValue *luaH_newkey (lua_State *L, Table *t, const TValue *key) {
   Node *mp;
+  luaG_dumptable(L, t);
   if (ttisnil(key)) luaG_runerror(L, "table index is nil");
   else if (ttisnumber(key) && luai_numisnan(L, nvalue(key)))
     luaG_runerror(L, "table index is NaN");
   mp = mainposition(t, key);
+  printf("New key: "); lua_dumpkey(key); luaG_dumpnodeindex(t, mp, "; mp ");
   if (!ttisnil(gval(mp)) || isdummy(mp)) {  /* main position is taken? */
     Node *othern;
     Node *n = getfreepos(t);  /* get a free place */
     if (n == NULL) {  /* cannot find a free place? */
       rehash(L, t, key);  /* grow table */
+      luaG_dumptable(L, t);
       /* whatever called 'newkey' take care of TM cache and GC barrier */
       return luaH_set(L, t, key);  /* insert key into grown table */
     }
     lua_assert(!isdummy(n));
     othern = mainposition(t, gkey(mp));
+    luaG_dumpnodeindex(t, othern, "othern ");
     if (othern != mp) {  /* is colliding node out of its main position? */
       /* yes; move colliding node into free position */
       while (gnext(othern) != mp) othern = gnext(othern);  /* find previous */
