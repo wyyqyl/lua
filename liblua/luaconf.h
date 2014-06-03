@@ -546,6 +546,10 @@
 */
 
 
+#ifndef lua_assert
+#include <assert.h>
+#define lua_assert assert
+#endif // lua_assert
 
 #endif
 
