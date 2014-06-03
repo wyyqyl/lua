@@ -547,8 +547,8 @@
 
 
 #ifndef lua_assert
-#include <assert.h>
-#define lua_assert assert
+LUAI_FUNC void lugG_break();
+#define lua_assert(_Expression) (void)(((!!(_Expression)) || (lugG_break(), 0)))
 #endif // lua_assert
 
 #endif

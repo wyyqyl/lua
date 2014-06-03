@@ -627,4 +627,9 @@ void luaG_dumpnodeindex(Table* t, Node* node, const char* msg) {
 }
 
 
+void lugG_break() {
+  __asm int 3
+}
+
+
 #endif // LUA_DEBUG
