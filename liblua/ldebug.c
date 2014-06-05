@@ -622,8 +622,7 @@ void luaG_dumptable(lua_State* L, Table* t) {
 
 
 void luaG_dumpnodeindex(Table* t, Node* node, const char* msg) {
-  printf("%sIndex: %d\n", msg,
-    (cast_int(node) - cast_int(t->node)) / sizeof(Node));
+  printf("%sIndex: %d\n", msg, cast_int(node - t->node));
 }
 
 
